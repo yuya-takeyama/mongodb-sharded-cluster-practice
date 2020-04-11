@@ -7,6 +7,27 @@ services:
     volumes:
       - client-home:/home/mongodb
 
+  config-01:
+    image: mongo:3.6.17-xenial
+    command: ["mongod", "--config", "/etc/mongodb/mongod.conf"]
+    volumes:
+      - data-config-01:/data/db
+      - ./config-01/config:/etc/mongodb
+
+  config-02:
+    image: mongo:3.6.17-xenial
+    command: ["mongod", "--config", "/etc/mongodb/mongod.conf"]
+    volumes:
+      - data-config-02:/data/db
+      - ./config-02/config:/etc/mongodb
+
+  config-03:
+    image: mongo:3.6.17-xenial
+    command: ["mongod", "--config", "/etc/mongodb/mongod.conf"]
+    volumes:
+      - data-config-03:/data/db
+      - ./config-03/config:/etc/mongodb
+
   shard-a-01:
     image: mongo:3.6.17-xenial
     command: ["mongod", "--config", "/etc/mongodb/mongod.conf"]
@@ -30,6 +51,9 @@ services:
 
 volumes:
   client-home:
+  data-config-01:
+  data-config-02:
+  data-config-03:
   data-shard-a-01:
   data-shard-a-02:
   data-shard-a-03:
