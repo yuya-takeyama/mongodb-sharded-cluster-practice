@@ -1,0 +1,35 @@
+version: "3.7"
+
+services:
+  client:
+    image: mongo:3.6.17-xenial
+    command: ["tail"]
+    volumes:
+      - client-home:/home/mongodb
+
+  shard-a-01:
+    image: mongo:3.6.17-xenial
+    command: ["mongod", "--config", "/etc/mongodb/mongod.conf"]
+    volumes:
+      - data-shard-a-01:/data/db
+      - ./shard-a-01/config:/etc/mongodb
+
+  shard-a-02:
+    image: mongo:3.6.17-xenial
+    command: ["mongod", "--config", "/etc/mongodb/mongod.conf"]
+    volumes:
+      - data-shard-a-02:/data/db
+      - ./shard-a-02/config:/etc/mongodb
+
+  shard-a-03:
+    image: mongo:3.6.17-xenial
+    command: ["mongod", "--config", "/etc/mongodb/mongod.conf"]
+    volumes:
+      - data-shard-a-03:/data/db
+      - ./shard-a-03/config:/etc/mongodb
+
+volumes:
+  client-home:
+  data-shard-a-01:
+  data-shard-a-02:
+  data-shard-a-03:
