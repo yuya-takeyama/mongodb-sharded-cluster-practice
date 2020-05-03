@@ -70,6 +70,91 @@ services:
       - data-shard-b-03:/data/db
       - ./shard-b-03/config:/etc/mongodb
 
+  shard-c-01:
+    image: mongo:3.6.17-xenial
+    command: ["mongod", "--config", "/etc/mongodb/mongod.conf"]
+    volumes:
+      - data-shard-c-01:/data/db
+      - ./shard-c-01/config:/etc/mongodb
+
+  shard-c-02:
+    image: mongo:3.6.17-xenial
+    command: ["mongod", "--config", "/etc/mongodb/mongod.conf"]
+    volumes:
+      - data-shard-c-02:/data/db
+      - ./shard-c-02/config:/etc/mongodb
+
+  shard-c-03:
+    image: mongo:3.6.17-xenial
+    command: ["mongod", "--config", "/etc/mongodb/mongod.conf"]
+    volumes:
+      - data-shard-c-03:/data/db
+      - ./shard-c-03/config:/etc/mongodb
+
+  shard-d-01:
+    image: mongo:3.6.17-xenial
+    command: ["mongod", "--config", "/etc/mongodb/mongod.conf"]
+    volumes:
+      - data-shard-d-01:/data/db
+      - ./shard-d-01/config:/etc/mongodb
+
+  shard-d-02:
+    image: mongo:3.6.17-xenial
+    command: ["mongod", "--config", "/etc/mongodb/mongod.conf"]
+    volumes:
+      - data-shard-d-02:/data/db
+      - ./shard-d-02/config:/etc/mongodb
+
+  shard-d-03:
+    image: mongo:3.6.17-xenial
+    command: ["mongod", "--config", "/etc/mongodb/mongod.conf"]
+    volumes:
+      - data-shard-d-03:/data/db
+      - ./shard-d-03/config:/etc/mongodb
+
+  shard-e-01:
+    image: mongo:3.6.17-xenial
+    command: ["mongod", "--config", "/etc/mongodb/mongod.conf"]
+    volumes:
+      - data-shard-e-01:/data/db
+      - ./shard-e-01/config:/etc/mongodb
+
+  shard-e-02:
+    image: mongo:3.6.17-xenial
+    command: ["mongod", "--config", "/etc/mongodb/mongod.conf"]
+    volumes:
+      - data-shard-e-02:/data/db
+      - ./shard-e-02/config:/etc/mongodb
+
+  shard-e-03:
+    image: mongo:3.6.17-xenial
+    command: ["mongod", "--config", "/etc/mongodb/mongod.conf"]
+    volumes:
+      - data-shard-e-03:/data/db
+      - ./shard-e-03/config:/etc/mongodb
+
+  shard-f-01:
+    image: mongo:3.6.17-xenial
+    command: ["mongod", "--config", "/etc/mongodb/mongod.conf"]
+    volumes:
+      - data-shard-f-01:/data/db
+      - ./shard-f-01/config:/etc/mongodb
+
+  shard-f-02:
+    image: mongo:3.6.17-xenial
+    command: ["mongod", "--config", "/etc/mongodb/mongod.conf"]
+    volumes:
+      - data-shard-f-02:/data/db
+      - ./shard-f-02/config:/etc/mongodb
+
+  shard-f-03:
+    image: mongo:3.6.17-xenial
+    command: ["mongod", "--config", "/etc/mongodb/mongod.conf"]
+    volumes:
+      - data-shard-f-03:/data/db
+      - ./shard-f-03/config:/etc/mongodb
+
+
   router:
     image: mongo:3.6.17-xenial
     command: ["mongos", "--config", "/etc/mongodb/mongod.conf"]
@@ -88,4 +173,16 @@ volumes:
   data-shard-b-01:
   data-shard-b-02:
   data-shard-b-03:
+  data-shard-c-01:
+  data-shard-c-02:
+  data-shard-c-03:
+  data-shard-d-01:
+  data-shard-d-02:
+  data-shard-d-03:
+  data-shard-e-01:
+  data-shard-e-02:
+  data-shard-e-03:
+  data-shard-f-01:
+  data-shard-f-02:
+  data-shard-f-03:
   data-router:
