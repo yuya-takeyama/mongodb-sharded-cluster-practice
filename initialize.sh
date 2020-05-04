@@ -6,7 +6,10 @@ set -o pipefail
 echo "Setting up Config Server Replica Set"
 docker-compose run --rm client mongo config-01:27019 --quiet --eval 'rs.initiate({_id: "rs-config", configsvr: true, members: [{_id: 0, host: "config-01:27019"}, {_id: 1, host: "config-02:27019"}, {_id: 2, host: "config-03:27019"}]});'
 
-echo "Setting up Secondary Shard Replica Set"
+echo "Setting up Primary Shard Replica Set"
+docker-compose run --rm client mongo shard-a-01:27018 --quiet --eval 'rs.initiate({_id: "rs-shard-a", members: [{_id: 0, host: "shard-a-01:27018"}, {_id: 1, host: "shard-a-02:27018"}, {_id: 2, host: "shard-a-03:27018"}]});'
+
+echo "Setting up Secondary Shard Replica Sets"
 docker-compose run --rm client mongo shard-b-01:27018 --quiet --eval 'rs.initiate({_id: "rs-shard-b", members: [{_id: 0, host: "shard-b-01:27018"}, {_id: 1, host: "shard-b-02:27018"}, {_id: 2, host: "shard-b-03:27018"}]});'
 docker-compose run --rm client mongo shard-c-01:27018 --quiet --eval 'rs.initiate({_id: "rs-shard-c", members: [{_id: 0, host: "shard-c-01:27018"}, {_id: 1, host: "shard-c-02:27018"}, {_id: 2, host: "shard-c-03:27018"}]});'
 docker-compose run --rm client mongo shard-d-01:27018 --quiet --eval 'rs.initiate({_id: "rs-shard-d", members: [{_id: 0, host: "shard-d-01:27018"}, {_id: 1, host: "shard-d-02:27018"}, {_id: 2, host: "shard-d-03:27018"}]});'
@@ -18,15 +21,15 @@ sleep 10
 
 echo "Setting up Shards"
 docker-compose run --rm client mongo router:27017/config --quiet --eval '
-  db.settings.save({_id: "chunksize", value: 1});
-  sh.addShard("rs-shard-a/shard-a-01:27018,shard-a-02:27018,shard-a-03:27018");
-  sh.addShard("rs-shard-b/shard-b-01:27018,shard-b-02:27018,shard-b-03:27018");
-  sh.addShard("rs-shard-c/shard-c-01:27018,shard-c-02:27018,shard-c-03:27018");
-  sh.addShard("rs-shard-d/shard-d-01:27018,shard-d-02:27018,shard-d-03:27018");
-  sh.addShard("rs-shard-e/shard-e-01:27018,shard-e-02:27018,shard-e-03:27018");
-  sh.addShard("rs-shard-f/shard-f-01:27018,shard-f-02:27018,shard-f-03:27018");
-  sh.enableSharding("app");
-  sh.shardCollection("app.users", {name: "hashed"});
+  printjson(db.settings.save({_id: "chunksize", value: 1}));
+  printjson(sh.addShard("rs-shard-a/shard-a-01:27018,shard-a-02:27018,shard-a-03:27018"));
+  printjson(sh.addShard("rs-shard-b/shard-b-01:27018,shard-b-02:27018,shard-b-03:27018"));
+  printjson(sh.addShard("rs-shard-c/shard-c-01:27018,shard-c-02:27018,shard-c-03:27018"));
+  printjson(sh.addShard("rs-shard-d/shard-d-01:27018,shard-d-02:27018,shard-d-03:27018"));
+  printjson(sh.addShard("rs-shard-e/shard-e-01:27018,shard-e-02:27018,shard-e-03:27018"));
+  printjson(sh.addShard("rs-shard-f/shard-f-01:27018,shard-f-02:27018,shard-f-03:27018"));
+  printjson(sh.enableSharding("app"));
+  printjson(sh.shardCollection("app.users", {name: "hashed"}));
 '
 
 echo "Wait for 10 seconds..."
