@@ -4,23 +4,23 @@ set -ue
 set -o pipefail
 
 echo "Setting up Config Server Replica Set"
-docker-compose run --rm client mongo config-01:27019 --quiet --eval 'rs.initiate({_id: "rs-config", configsvr: true, members: [{_id: 0, host: "config-01:27019"}, {_id: 1, host: "config-02:27019"}, {_id: 2, host: "config-03:27019"}]});'
+docker compose run --rm client mongo config-01:27019 --quiet --eval 'rs.initiate({_id: "rs-config", configsvr: true, members: [{_id: 0, host: "config-01:27019"}, {_id: 1, host: "config-02:27019"}, {_id: 2, host: "config-03:27019"}]});'
 
 echo "Setting up Primary Shard Replica Set"
-docker-compose run --rm client mongo shard-a-01:27018 --quiet --eval 'rs.initiate({_id: "rs-shard-a", members: [{_id: 0, host: "shard-a-01:27018"}, {_id: 1, host: "shard-a-02:27018"}, {_id: 2, host: "shard-a-03:27018"}]});'
+docker compose run --rm client mongo shard-a-01:27018 --quiet --eval 'rs.initiate({_id: "rs-shard-a", members: [{_id: 0, host: "shard-a-01:27018"}, {_id: 1, host: "shard-a-02:27018"}, {_id: 2, host: "shard-a-03:27018"}]});'
 
 echo "Setting up Secondary Shard Replica Sets"
-docker-compose run --rm client mongo shard-b-01:27018 --quiet --eval 'rs.initiate({_id: "rs-shard-b", members: [{_id: 0, host: "shard-b-01:27018"}, {_id: 1, host: "shard-b-02:27018"}, {_id: 2, host: "shard-b-03:27018"}]});'
-docker-compose run --rm client mongo shard-c-01:27018 --quiet --eval 'rs.initiate({_id: "rs-shard-c", members: [{_id: 0, host: "shard-c-01:27018"}, {_id: 1, host: "shard-c-02:27018"}, {_id: 2, host: "shard-c-03:27018"}]});'
-docker-compose run --rm client mongo shard-d-01:27018 --quiet --eval 'rs.initiate({_id: "rs-shard-d", members: [{_id: 0, host: "shard-d-01:27018"}, {_id: 1, host: "shard-d-02:27018"}, {_id: 2, host: "shard-d-03:27018"}]});'
-docker-compose run --rm client mongo shard-e-01:27018 --quiet --eval 'rs.initiate({_id: "rs-shard-e", members: [{_id: 0, host: "shard-e-01:27018"}, {_id: 1, host: "shard-e-02:27018"}, {_id: 2, host: "shard-e-03:27018"}]});'
-docker-compose run --rm client mongo shard-f-01:27018 --quiet --eval 'rs.initiate({_id: "rs-shard-f", members: [{_id: 0, host: "shard-f-01:27018"}, {_id: 1, host: "shard-f-02:27018"}, {_id: 2, host: "shard-f-03:27018"}]});'
+docker compose run --rm client mongo shard-b-01:27018 --quiet --eval 'rs.initiate({_id: "rs-shard-b", members: [{_id: 0, host: "shard-b-01:27018"}, {_id: 1, host: "shard-b-02:27018"}, {_id: 2, host: "shard-b-03:27018"}]});'
+docker compose run --rm client mongo shard-c-01:27018 --quiet --eval 'rs.initiate({_id: "rs-shard-c", members: [{_id: 0, host: "shard-c-01:27018"}, {_id: 1, host: "shard-c-02:27018"}, {_id: 2, host: "shard-c-03:27018"}]});'
+docker compose run --rm client mongo shard-d-01:27018 --quiet --eval 'rs.initiate({_id: "rs-shard-d", members: [{_id: 0, host: "shard-d-01:27018"}, {_id: 1, host: "shard-d-02:27018"}, {_id: 2, host: "shard-d-03:27018"}]});'
+docker compose run --rm client mongo shard-e-01:27018 --quiet --eval 'rs.initiate({_id: "rs-shard-e", members: [{_id: 0, host: "shard-e-01:27018"}, {_id: 1, host: "shard-e-02:27018"}, {_id: 2, host: "shard-e-03:27018"}]});'
+docker compose run --rm client mongo shard-f-01:27018 --quiet --eval 'rs.initiate({_id: "rs-shard-f", members: [{_id: 0, host: "shard-f-01:27018"}, {_id: 1, host: "shard-f-02:27018"}, {_id: 2, host: "shard-f-03:27018"}]});'
 
 echo "Wait for 10 seconds..."
 sleep 10
 
 echo "Setting up Shards"
-docker-compose run --rm client mongo router:27017/config --quiet --eval '
+docker compose run --rm client mongo router:27017/config --quiet --eval '
   printjson(db.settings.save({_id: "chunksize", value: 1}));
   printjson(sh.addShard("rs-shard-a/shard-a-01:27018,shard-a-02:27018,shard-a-03:27018"));
   printjson(sh.addShard("rs-shard-b/shard-b-01:27018,shard-b-02:27018,shard-b-03:27018"));
@@ -36,7 +36,7 @@ echo "Wait for 10 seconds..."
 sleep 10
 
 echo "Inserting data..."
-docker-compose run --rm client mongo router:27017/app --quiet --eval '
+docker compose run --rm client mongo router:27017/app --quiet --eval '
   sh.stopBalancer();
 
   for (var i = 1; i <= 100000; i++) {
